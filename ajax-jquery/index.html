@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jquery-ajax demo</title>
+</head>
+<body>
+    <!--jquery中自己对ajax进一步封装-->
+
+    <script>
+        function call(type, api, dataCont, async, doThingSucce, doThingLost) {
+
+        //加载中....
+        //	$(".loadingBg").removeClass('loadingD');
+
+        if(ajaxAbort) {
+            ajaxAbort.abort();
+        }
+        ajaxAbort = $.ajax({
+            type: type ? type : 'POST',
+            crossDomain: true,
+            url: api,
+            dataType: 'json',
+            data: dataCont ? dataCont : '',
+            async: async ? async : false,
+            success: function(e) {
+                /*如果有ApiToken,就更新已有ApiToken*/
+                if(e['ApiToken']) {
+                    $.cookie("ApiToken", e['ApiToken']);
+                }
+
+                if(e['status'] == 200) {
+
+                    if(e['data']) {
+                        doThingSucce(e['data']); //有返回数据就返回
+
+                        //					$(".loadingBg").addClass('loadingD'); /*移除加载中图片*/
+                    } else {
+                        if(doThingSucce) {
+                            doThingSucce(); //没有就直接执行成功函数
+                        }
+                        //					$(".loadingBg").addClass('loadingD'); /*移除加载中图片*/
+                    }
+                } else if(e['status'] == 203 || e['status'] == 600) {
+
+                    //账号过期 判断缓存中是否存在用户名和用户密码
+                    //是：就自动登录
+                    //否：跳到登录页面重新登录
+                    var userphone = localStorage.getItem("userphone"); //缓存中的用户名
+                    var userpwd = localStorage.getItem("userpwd"); //缓存中用户密码
+                    //判断是否存在
+                    if(localStorage.getItem("userphone") && localStorage.getItem("userpwd")) {
+                        //成功回调函数
+                        var loginSuccess = function() {
+
+                        };
+                        //登录失败操作
+                        var loginFail = function(e) {
+                            state = 1;
+                            meg('提示', e, 'body', '');
+                        };
+                        var loginData = {
+                            account: userphone,
+                            password: userpwd
+                        };
+
+                        /*登录*/
+                        call('', apiUrl + "index/user/Login", loginData, '', loginSuccess, loginFail);
+                    } else {
+                        meg("提示", "请重新登录", "body", function() {
+                            $.cookie("ApiToken", "");
+                            var url = (location.href).split("//")[1].split('/');
+                            url = url[url.length - 1]
+                            if(url == 'home.html') {
+                                location.href = location.href;
+                            } else {
+                                $.cookie("backUrl", location.href);
+                                location.href = "login.html";
+                            }
+
+                        })
+                    }
+
+                } else {
+                    //				$(".loadingBg").addClass('loadingD'); /*移除加载中图片*/
+
+                    if(doThingLost) {
+                        doThingLost(e['error']);
+                    } else {
+                        meg("提示", e['error'], "body");
+                    }
+                }
+
+            },
+            error: function(xh) {
+                meg("提示","当前网络不畅通,请检查您的网络","body");
+            }
+        })
+    }
+    </script>
+
+</body>
+</html>
