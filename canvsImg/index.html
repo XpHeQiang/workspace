@@ -17,9 +17,9 @@
         var source = document.getElementById('source');
         var preview = document.getElementById('preview');
 
-        source.onload = function() {
-            var width = source.width;
-            var height = source.height;
+        preview.onload = function() {
+            var width = preview.width;
+            var height = preview.height;
             var context = canvas.getContext('2d');
 
             // draw image params
@@ -31,18 +31,18 @@
             var dy = 0;
             var dWidth = width;
             var dHeight = height;
-            var quality = 0.6;
+            var quality = 1;
 
             canvas.width = width;
             canvas.height = height;
 
-            context.drawImage(source, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+            context.drawImage(preview, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
             var dataUrl = canvas.toDataURL('image/jpg', quality);
             preview.src = dataUrl;
         };
 
-        source.src = 'img/a2.jpg';
+        preview.src = 'img/a2.jpg';
     </script>
 </body>
 </html>
