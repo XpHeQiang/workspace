@@ -12,12 +12,14 @@
         let canvas = document.getElementById("canvas");
         if(canvas.getContext){
             let ctx = canvas.getContext("2d");
+
             // 实心填充
             ctx.fillStyle = "red"
             ctx.fillRect(10,10,50,20);
             ctx.clearRect(15,15,45,15)
             ctx.fillRect(0,10,10,20)
             ctx.clearRect(0,15,10,15)
+            
             // 边线
             ctx.strokeStyle = "blue"
             ctx.strokeRect(10,50,100,100)
