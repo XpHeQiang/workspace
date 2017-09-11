@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="expressAjax()">发起请求</button>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+        var address = "";
+        $.get("china_address_v3.json",function(data){
+            console.log(data[0])
+            address = data;
+        });
+        
+        function expressAjax(){
+            $.ajax({
+                type: "POST",
+                url: "https://lsp.wuliu.taobao.com/locationservice/addr/output_address_town_array.do?l1=510000&l2=510100&l3=510108",
+                data: "",
+                dataType: "JSONP",    
+                success: function(data){
+                    console.log(data.result);
+                    resNode();
+                }
+            })
+        }
+
+        function resNode(){
+            $.ajax({
+                type: "get",
+                url: "http://192.168.0.103:8081/aaa",    
+                data: {aa : "来了"},
+                success: function(data){
+                    
+                }
+            })
+        }
+        
+    </script>
+</body>
+</html>
