@@ -11,10 +11,29 @@
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script>
         var address = "";
+
+        var provinceValue = 0;
+        var cityValue = 0;
+        var areaValue = 0;
+
         $.get("china_address_v3.json",function(data){
-            console.log(data[0])
             address = data;
+            for(var i=0;i<100;i++){
+                provinceValue = address[i].value;
+                for(var j = i; j< 100; j++){
+                    if(address[j].parent == provinceValue){
+                        cityValue = address[j].value; //市
+                        areaValue = address[j].parent;  //区
+                        continue;
+                    }
+                }
+                console.log("provinceValue==="+provinceValue);
+                console.log("cityValue==="+cityValue);
+                console.log("areaValue==="+areaValue);
+                // expressAjax();
+            }
         });
+        
         
         function expressAjax(){
             $.ajax({
@@ -24,16 +43,16 @@
                 dataType: "JSONP",    
                 success: function(data){
                     console.log(data.result);
-                    resNode();
+                    resNode(JSON.stringify(data.result));
                 }
             })
         }
 
-        function resNode(){
+        function resNode(obj){
             $.ajax({
                 type: "get",
                 url: "http://192.168.0.103:8081/aaa",    
-                data: {aa : "来了"},
+                data: {aa : obj},
                 success: function(data){
                     
                 }
