@@ -15,30 +15,50 @@
         var provinceValue = 0;
         var cityValue = 0;
         var areaValue = 0;
+        var last = false;
+        var iCount = 0;
 
         $.get("china_address_v3.json",function(data){
             address = data;
-            for(var i=0;i<100;i++){
+            for(var i=0;i<30;i++){
                 provinceValue = address[i].value;
-                for(var j = i; j< 100; j++){
-                    if(address[j].parent == provinceValue){
+                for(var j = i+1; j< 30; j++){
+                    if(Number(address[j].parent) === Number(provinceValue)){
                         cityValue = address[j].value; //市
-                        areaValue = address[j].parent;  //区
-                        continue;
+                        for(var k = j+1; k<30; k++){
+                            if(cityValue == address[k].parent){
+                                areaValue = address[k].value;  //区
+
+                                // console.log("provinceValue==="+provinceValue);
+                                // console.log("cityValue==="+cityValue);
+                                // console.log("areaValue==="+areaValue);
+                                console.log(iCount)
+                                if(iCount == 30 && k == 29){
+                                    last = true;
+                                    console.log("last==="+last);
+                                }
+
+                                // expressAjax(provinceValue,cityValue,areaValue);
+                            }
+                        }
+                        
+
                     }
+
+
+                    
                 }
-                console.log("provinceValue==="+provinceValue);
-                console.log("cityValue==="+cityValue);
-                console.log("areaValue==="+areaValue);
-                // expressAjax();
+                iCount++;
             }
         });
+
         
         
-        function expressAjax(){
+        
+        function expressAjax(provinceValue,cityValue,areaValue){
             $.ajax({
                 type: "POST",
-                url: "https://lsp.wuliu.taobao.com/locationservice/addr/output_address_town_array.do?l1=510000&l2=510100&l3=510108",
+                url: "https://lsp.wuliu.taobao.com/locationservice/addr/output_address_town_array.do?l1="+provinceValue+"&l2="+cityValue+"&l3="+areaValue+"",
                 data: "",
                 dataType: "JSONP",    
                 success: function(data){
@@ -51,8 +71,8 @@
         function resNode(obj){
             $.ajax({
                 type: "get",
-                url: "http://192.168.0.103:8081/aaa",    
-                data: {aa : obj},
+                url: "http://192.168.1.3:8081/aaa",    
+                data: {aa : obj,last: last},
                 success: function(data){
                     
                 }
