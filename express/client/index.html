@@ -15,8 +15,6 @@
         var provinceValue = 0;
         var cityValue = 0;
         var areaValue = 0;
-        var last = false;
-        var iCount = 0;
 
         $.get("china_address_v3.json",function(data){
             address = data;
@@ -32,13 +30,13 @@
                                 // console.log("provinceValue==="+provinceValue);
                                 // console.log("cityValue==="+cityValue);
                                 // console.log("areaValue==="+areaValue);
-                                console.log(iCount)
-                                if(iCount == 30 && k == 29){
-                                    last = true;
-                                    console.log("last==="+last);
-                                }
+                                // console.log(iCount)
+                                // if(iCount == 30 && k == 29){
+                                //     last = true;
+                                //     console.log("last==="+last);
+                                // }
 
-                                // expressAjax(provinceValue,cityValue,areaValue);
+                                expressAjax(provinceValue,cityValue,areaValue);
                             }
                         }
                         
@@ -48,7 +46,6 @@
 
                     
                 }
-                iCount++;
             }
         });
 
@@ -71,8 +68,8 @@
         function resNode(obj){
             $.ajax({
                 type: "get",
-                url: "http://192.168.1.3:8081/aaa",    
-                data: {aa : obj,last: last},
+                url: "http://192.168.0.103:8081/aaa",    
+                data: {aa : obj},
                 success: function(data){
                     
                 }

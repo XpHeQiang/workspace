@@ -9,24 +9,18 @@ app.get('/', function (req, res) {
 })
 app.get('/aaa', function (req, res) {
   var data = req.query.aa; //接收客户端发送过来的数据
-  var last = req.query.last; //接收客户端发送过来的数据
 
-  console.log(last)
-
-  // data = JSON.parse(data);
-  // var dataArr = [];
-  // for(var i=0; i<data[0].length; i++){
-  //   var dataObj = {
-  //     name : data[i][1],
-  //     value : data[i][0],
-  //     parent : data[i][2]
-  //   };
-  //   dataArr.push(dataObj);
-  // }
-
-  // if(lsat){
-  //   fs.appendFile('address.json', JSON.stringify(dataArr) ,  function(err) {});
-  // }
+  data = JSON.parse(data);
+  var dataArr = [];
+  for(var i=0; i<data[0].length; i++){
+    var dataObj = {
+      name : data[i][1],
+      value : data[i][0],
+      parent : data[i][2]
+    };
+    fs.appendFile('address.json', JSON.stringify(dataObj)+"," ,  function(err) {});
+    // dataArr.push(dataObj);
+  }
 
   
 
