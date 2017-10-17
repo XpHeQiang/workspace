@@ -7,7 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <button onclick="expressAjax()">发起请求</button>
+    <div id="allMsg"></div>
+    <!-- <button onclick="expressAjax()">发起请求</button> -->
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script>
         var address = "";
@@ -18,12 +19,13 @@
 
         $.get("china_address_v3.json",function(data){
             address = data;
-            for(var i=0;i<30;i++){
+            let dataLength = data.length;
+            for(var i=0;i<dataLength;i++){
                 provinceValue = address[i].value;
-                for(var j = i+1; j< 30; j++){
+                for(var j = i+1; j< dataLength; j++){
                     if(Number(address[j].parent) === Number(provinceValue)){
                         cityValue = address[j].value; //市
-                        for(var k = j+1; k<30; k++){
+                        for(var k = j+1; k<dataLength; k++){
                             if(cityValue == address[k].parent){
                                 areaValue = address[k].value;  //区
 
@@ -60,7 +62,27 @@
                 dataType: "JSONP",    
                 success: function(data){
                     console.log(data.result);
-                    resNode(JSON.stringify(data.result));
+
+                    let datas = data.result;
+                    var dataArr = [];
+                    if(datas.length != 0){
+                        for(var i=0; i<datas.length; i++){
+                            var dataObj = {
+                                name : datas[i][1],
+                                value : datas[i][0],
+                                parent : datas[i][2]
+                            };
+                            // fs.appendFile('address.json', JSON.stringify(dataObj)+"," ,  function(err) {});
+                            $("#allMsg").html($("#allMsg").html()+JSON.stringify(dataObj)+",")
+                            // dataArr.push(dataObj);
+                        }
+                    }
+                    
+
+
+                    
+                    // document.write(data.result.toString())
+                    // resNode(JSON.stringify(data.result));
                 }
             })
         }
